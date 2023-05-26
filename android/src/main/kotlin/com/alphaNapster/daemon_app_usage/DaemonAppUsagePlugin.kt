@@ -67,7 +67,7 @@ class DaemonAppUsagePlugin: FlutterPlugin, MethodChannel.MethodCallHandler, Acti
     override fun onDetachedFromActivity() {
 
     }
-    
+
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     @SuppressWarnings("ResourceType")
@@ -77,12 +77,19 @@ class DaemonAppUsagePlugin: FlutterPlugin, MethodChannel.MethodCallHandler, Acti
 
         val isPermissionGranted = checkUsageStatsPermission()
 
+
+        Log.d("permission granted: " + isPermissionGranted)
         if(isPermissionGranted) {
             usageStats = getSystemService<UsageStatsManager>()
-        }else {
+
+            val list = getAppUsageList(usageStats)
+            printUsageStats(list)
+
+        } else {
             val intent = Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS)
 //            intent.addFlags()
             this.activity.startActivity(intent)
+//           startActivity(this.activity, intent, null)
         }
     }
 
@@ -127,6 +134,9 @@ class DaemonAppUsagePlugin: FlutterPlugin, MethodChannel.MethodCallHandler, Acti
                 android.os.Process.myUid(), packageName
             )
         }
+
+        Log.("mode: " + mode)
+
         return mode == AppOpsManager.MODE_ALLOWED
     }
 
