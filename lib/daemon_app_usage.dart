@@ -14,7 +14,7 @@ class DaemonAppUsage {
       MethodChannel('daemon_app_usage.methodChannel');
 
 // Future<List<DaemonAppUsageDetail>>
-  void getAppUsageData() async {
+  Future<void> getAppUsageData() async {
     if (Platform.isAndroid) {
       log('Calling getAppUsage() from flutter');
       await _methodChannel.invokeMethod("getAppUsage");
