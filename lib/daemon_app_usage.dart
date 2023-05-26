@@ -10,7 +10,8 @@ class DaemonAppUsage {
 //     return DaemonAppUsagePlatform.instance.getPlatformVersion();
 //   }
 
-  static const MethodChannel _methodChannel = MethodChannel('daemon_app_usage');
+  static const MethodChannel _methodChannel =
+      MethodChannel('daemon_app_usage.methodChannel');
 
 // Future<List<DaemonAppUsageDetail>>
   void getAppUsageData() async {
