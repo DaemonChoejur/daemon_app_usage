@@ -28,6 +28,8 @@ class DaemonAppUsagePlugin: FlutterPlugin, MethodChannel.MethodCallHandler, Acti
     private val methodChannelName = "daemon_app_usage.methodChannel"
     private lateinit var activity: Activity
 
+    private lateinit var usageStats: UsageStatsManager
+
     private val packageName = "DaemonAppUsagePlugin"
 
 
@@ -65,26 +67,29 @@ class DaemonAppUsagePlugin: FlutterPlugin, MethodChannel.MethodCallHandler, Acti
     override fun onDetachedFromActivity() {
 
     }
+    
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     @SuppressWarnings("ResourceType")
 //    @RequiresApi(Build.VERSION_CODES.KITKAT)
    private fun getAppUsage(result: Result) {
-        if(checkUsageStatsPermission()) {
+//        val usageStatsManager = context.getSystemService("usagestats") as UsageStatsManager
 
-           val list: List<UsageStats> = getAppUsageList()
-            printUsageStats(list)
+        val isPermissionGranted = checkUsageStatsPermission()
 
+        if(isPermissionGranted) {
+            usageStats = getSystemService<UsageStatsManager>()
         }else {
             val intent = Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS)
+//            intent.addFlags()
             this.activity.startActivity(intent)
         }
     }
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     @SuppressWarnings("ResourceType")
-    private fun getAppUsageList(): List<UsageStats> {
-        val usageStatsManager = context.getSystemService("usagestats") as UsageStatsManager
+    private fun getAppUsageList(usageStatsManager: UsageStatsManager): List<UsageStats> {
+//        val usageStatsManager = context.getSystemService("usagestats") as UsageStatsManager
 //        val now: Long = Calendar.getInstance().timeInMillis
 
         val interval = UsageStatsManager.INTERVAL_DAILY
